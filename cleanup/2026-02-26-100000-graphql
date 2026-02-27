@@ -51,3 +51,5 @@
 
 - A GraphQL server can act as an **aggregator** of multiple data sources (BFF pattern)
 - Some databases (e.g. PostgreSQL) have native GraphQL exposure support
+
+https://graphql.org/
