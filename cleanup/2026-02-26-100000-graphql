@@ -1,0 +1,53 @@
+### [GraphQL Distilled](https://confoo.ca/en/2026/session/graphql-distilled)
+
+**Core idea**: the client decides *what* data to fetch; the server decides *where* to get it from.
+
+---
+
+#### Key Concepts
+
+- Single endpoint: `POST /graphql`
+- **Queries**: fetch data, client-specified fields
+  - **Fragments**: reusable query parts
+  - **Variables**: usable for parameterized queries
+- **Mutations**: write/update operations
+- **Subscriptions**: server pushes live changes to clients (transport-independent : websocket, other)
+
+---
+
+#### Schema
+
+- Strongly typed — clients can only request fields defined in the schema
+- Supports enums and type inheritance on data objects
+- Acts as the API contract and enables **autocomplete** on queries
+- Built-in error handling with field validation
+- Versioning via **deprecation** (no versioned URLs)
+- Self-documenting by nature
+
+---
+
+#### Design Approach
+
+| Approach | Description | When to use |
+|---|---|---|
+| Schema-first | Define schema, generate code from it | Starting from scratch / greenfield |
+| Code-first | Write backend, schema is generated | Existing codebase |
+
+> Note: the approach cannot be changed later — choose deliberately.
+
+---
+
+#### The 5 Pillars
+
+1. Product-centric
+2. Hierarchical
+3. Strongly typed
+4. Client-specified responses
+5. Self-documenting
+
+---
+
+#### Federation
+
+- A GraphQL server can act as an **aggregator** of multiple data sources (BFF pattern)
+- Some databases (e.g. PostgreSQL) have native GraphQL exposure support

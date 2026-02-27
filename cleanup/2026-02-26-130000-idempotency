@@ -1,0 +1,60 @@
+### [Avoiding Déjà Vu: Building Resilient APIs with Idempotency](https://confoo.ca/en/2026/session/avoiding-deja-vu-building-resilient-apis-with-idempotency)
+
+**Idempotency**: calling the same operation multiple times produces the same result as calling it once.
+
+---
+
+Problem to solve : a user order food on Uber, didn't got the response. Or it ends up sending it twice because of a connectivy issue. We don't want it to order twice, and pay twice.
+
+#### HTTP Verb Idempotency
+
+| Idempotent | Not Idempotent |
+|---|---|
+| `GET`, `HEAD`, `OPTIONS`, `PUT`, `DELETE` | `POST`, `PATCH` |
+
+> Note: `PUT` and `DELETE` can also be non-idempotent in practice due to side effects.
+
+---
+
+#### Idempotency Keys
+
+**Server-side cache approach** (naive):
+- Cache the response using a hash of the request parameters as the key
+- Problem: parameters alone (plus IP, user ID, etc.) are rarely sufficient to uniquely identify a request
+
+**Client-side idempotency key** (recommended):
+- Client sends an `Idempotency-Key` header with a unique value (e.g. UUID)
+- Simpler and more reliable
+- can be baked into SDK/client
+
+**Backend implementation:**
+- Add a middleware layer to intercept requests, check the cache, and return the cached response if found
+- Guard against key collisions (e.g. from bugs) by validating that the cached request path matches the current one
+- Add an `Idempotency-Replayed: true` header on cached responses to ease debugging
+- This pattern is reusable beyond HTTP controllers — applicable anywhere in the system
+
+---
+
+#### TTL Strategy
+
+Choose TTL based on retry behavior and business requirements:
+
+| Use case | TTL |
+|---|---|
+| Mobile clients | Short (spotty connectivity, real-time interactions) |
+| Batch jobs | ~1 day (slow cadence, no urgency) |
+| Subscription / ticket management | Weeks (human-paced interactions) |
+| Regulatory / compliance | Indefinite (full traceability, exactly-once guarantee) |
+
+---
+
+#### Error Handling
+
+- Decide explicitly whether to cache error responses — there is no universal answer, it depends on the use case.
+
+---
+
+#### Race Conditions
+
+- Two near-simultaneous requests with the same key can both miss the cache
+- Solution: **cache locking on the key** — if a lock is held, wait; if a cached value is found after the wait, return it instead of re-processing

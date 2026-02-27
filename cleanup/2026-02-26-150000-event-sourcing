@@ -1,0 +1,59 @@
+### [How We Failed at Event Sourcing](https://confoo.ca/en/2026/session/how-we-failed-at-event-sourcing)
+
+A post-mortem on applying event sourcing at scale — and what they learned.
+
+---
+
+#### Event-Driven vs Event Sourcing
+
+- **Event-driven**: events are short-lived signals
+- **Event sourcing**: events are the *source of truth* — persisted, immutable, and used to rebuild state
+
+---
+
+#### Why Event Sourcing Is Attractive
+
+- Full audit trail
+- Rebuildable state from history
+- Time travel / replay
+- Reduced direct coupling between components
+
+---
+
+#### What Went Wrong
+
+**Complexity**
+- Even simple UI interactions (e.g. a checkbox) required significant async processing
+- Everything being async means **eventual consistency everywhere** — hard to reason about and explain to users
+
+**Read capacity bottleneck**
+- All reads go through the event stream — capacity becomes a constraint
+- Large tenant onboarding causes **bursts of events**, saturating connections (expensive to scale)
+- Total event count grows **exponentially** over time
+
+**Noisy neighbor problem**
+- High-activity tenants degrade performance for others sharing the same event stream
+
+**Deployment catch-up**
+- On each deployment, the system must: find where it left off → read the backlog → go live
+- Rebuilding state from scratch could take **weeks**
+- During deployment, users are placed in **read-only mode**
+
+---
+
+#### Attempted Fixes
+
+| Approach | Verdict |
+|---|---|
+| **Snapshots** | Helps with large individual streams, not with a large *number* of streams |
+| **Sharding** | Only a temporary relief |
+| **Stateful actor model** | Too complex |
+| **Reduce event quantity** | Limits the core value proposition |
+
+---
+
+#### Lesson Learned
+
+> Let the team and the use case drive the architecture.
+
+Sometimes the right answer is **simpler CRUD** — faster to deliver, easier to operate, and good enough for most problems.
