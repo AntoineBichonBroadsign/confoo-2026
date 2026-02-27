@@ -1,0 +1,50 @@
+### [Setting Up a C# Pit of Success](https://confoo.ca/en/2026/session/setting-up-a-c-pit-of-success)
+
+Make it easy to do the right thing — configure the compiler and tooling to catch issues early.
+
+---
+
+#### Compiler & Language Settings (`.csproj`)
+
+- **Warnings as errors**: `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>`
+- **Nullable reference types**: `<Nullable>enable</Nullable>`
+  - Use `[MemberNotNullWhen]` to assert a nullable member is non-null under specific conditions
+
+---
+
+#### Roslyn Analyzers
+
+- Provide additional error detection and auto-fixes beyond the base compiler
+- Enable built-in .NET analyzers: `<EnableNETAnalyzers>true</EnableNETAnalyzers>`
+- Additional analyzers available on NuGet (including proprietary ones)
+- Configure rule severity in `.editorconfig`:
+  ```
+  dotnet_diagnostic.<ERRORCODE>.severity = error
+  ```
+- Can write **custom analyzers** to enforce team-specific code patterns
+
+---
+
+#### Suppression & Exceptions
+
+- It's acceptable to use `GlobalSuppressions.cs` or inline `#pragma` suppression for justified exceptions — just be intentional about it
+
+---
+
+#### Source Generators
+
+- Add code at compile time without reflection
+- Useful for reducing boilerplate while keeping strong typing
+
+---
+
+#### Dependency Security
+
+- **NuGet CVE audit**: `<NuGetAudit>true</NuGetAudit>` in the project file
+- Surfaces known vulnerabilities as build warnings — see [NuGet Audit docs](https://learn.microsoft.com/en-us/nuget/concepts/auditing-packages)
+
+---
+
+#### Continuous Testing
+
+- Run unit tests continuously (on save / on build) to catch regressions as early as possible

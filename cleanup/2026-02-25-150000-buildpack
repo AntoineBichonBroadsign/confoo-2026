@@ -1,0 +1,29 @@
+### [Effortless Containerization with Cloud Native Buildpacks](https://confoo.ca/en/2026/session/effortless-containerization-with-cloud-native-buildpacks)
+
+Generate container images without writing a Dockerfile — standardized, language-agnostic containerization.
+
+---
+
+#### What are Buildpacks?
+
+- Automatically detect and build your app into an OCI-compliant container image
+- Language-agnostic: same process regardless of stack
+- **Paketo** is a popular open-source implementation — see [`paketo-buildpacks/samples`](https://github.com/paketo-buildpacks/samples)
+- Can install additional OS libraries via `apt` on the resulting image
+
+---
+
+#### Adoption Checklist
+
+- Which languages/runtimes are supported by the chosen buildpack?
+- Which **builder** to use? (base image + bundled buildpacks)
+- Any extra OS packages needed?
+- Custom CA certificates required?
+
+---
+
+#### CI/CD Integration
+
+- CLI tool: `pack` for local builds and scripting
+- CircleCI has native buildpack support
+- The builder image can be referenced directly as the CI runner image
