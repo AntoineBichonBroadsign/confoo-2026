@@ -1,0 +1,20 @@
+- set warning as errors 
+    - "TreatWarnngAsError" in csproj
+- nullable reference type
+    - <Nullable>enable<>
+    - [MemberNotNullWhen]
+      - allow to mark some nullable as not null under conditions
+-  roselyn analyzers : 
+    - may include error dections and fixes
+    - can create your own
+    - <EnableNetAnalyzer>
+    - Available on nuget too, even from proprietary one
+- Static rules in .editorconfig
+   - control also rules of aroslyn analyzer via dotnet_diagnostic
+   .ERRORCODE.severity
+-  it's ok to use  GlobalSuppressions.cs and individual skip
+- create custom analyzer to enforce some code pattern for the team
+- source generator : add code a compile time
+- Nuget CVE : check on build in project file <NugetAudit>
+  - add in build warning, see doc
+- continuous testing (unit test)
